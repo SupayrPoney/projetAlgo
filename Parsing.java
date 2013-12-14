@@ -3,14 +3,14 @@ import java.io.*;
 
 
 public class Parsing{
-		// TODO Auto-generated method stub
 	//Attributs
 	private Vector listeCercles = new Vector();
 	private Vector listeDettes = new Vector();
 	private int ordreGraphe;
-	String chaine="";
+	private String chaine="";
 	
-	Parsing(String fichier){
+	//Constructeur
+	public Parsing(String fichier){
 		try{
 			InputStream ips = new FileInputStream(fichier);
 			InputStreamReader ipsr = new InputStreamReader(ips);
@@ -29,20 +29,17 @@ public class Parsing{
 			br.close();
 		}catch(Exception e){
 			System.out.println(e.toString());
-		}
-		
+		}	
 	}
 	
-	String lecture(String fichier){
-		return "string";
-	}
-	Vector getListeCercles(){
+	//Méthodes
+	public Vector getListeCercles(){
 		return this.listeCercles;
 	}
-	Vector getListeDettes(){
+	public Vector getListeDettes(){
 		return this.listeDettes;
 	}
-	int getOrdreGraphe(){
+	public int getOrdreGraphe(){
 		return this.ordreGraphe;
 	}
 }
