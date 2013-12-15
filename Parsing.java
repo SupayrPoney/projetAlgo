@@ -4,13 +4,14 @@ import java.io.*;
 
 public class Parsing{
 	//Attributs
-	private Vector listeCercles = new Vector();
-	private Vector listeDettes = new Vector();
+	private Vector <String>listeCercles = new Vector();
+	private Vector <String>listeDettes = new Vector();
 	private int ordreGraphe;
 	private String chaine="";
 	
 	//Constructeur
 	public Parsing(String fichier){
+		System.out.println("IN Parsing");
 		try{
 			InputStream ips = new FileInputStream(fichier);
 			InputStreamReader ipsr = new InputStreamReader(ips);
@@ -19,24 +20,31 @@ public class Parsing{
 			int nbCercles = Integer.parseInt(br.readLine());
 			System.out.println(nbCercles);
 			while((ligne = br.readLine())!= null){
+				System.out.println(ligne);
 				if(nbCercles > 0){
 					listeCercles.add(ligne);
 					nbCercles-=1;
-				}else{
+				}
+				else{
 					listeDettes.add(ligne);
 				}
+				System.out.println(ligne);
 			}
 			br.close();
 		}catch(Exception e){
 			System.out.println(e.toString());
-		}	
+		}
+		System.out.println("listeCercles: ");
+		System.out.println(listeCercles);
+		System.out.println("listeDettes: ");
+		System.out.println(listeDettes);
 	}
 	
 	//Méthodes
-	public Vector getListeCercles(){
+	public Vector<String> getListeCercles(){
 		return this.listeCercles;
 	}
-	public Vector getListeDettes(){
+	public Vector<String> getListeDettes(){
 		return this.listeDettes;
 	}
 	public int getOrdreGraphe(){
