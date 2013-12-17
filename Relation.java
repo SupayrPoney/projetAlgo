@@ -2,6 +2,7 @@ import java.util.Vector;
 
 
 public class Relation{
+	//Attributs
 	private Cercle from;
 	private Cercle to;
 	private int montantDette;
