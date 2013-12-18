@@ -3,7 +3,7 @@ import java.util.Vector;
 
 public class Graphe {
 	//Attributs
-	String [][]listeCercles;
+	Cercle []listeCercles;
 	String [][]listeDettes;
 	Matrice matriceIncidence;
 	
@@ -21,15 +21,15 @@ public class Graphe {
 		System.out.print("listeD.size: ");
 		System.out.println(listeD.size());
 		//Initialisation d'une matrice avec le nb de cercles et leur fonds(mais en 2 strings différents)
-		this.listeCercles = new String [listeC.size()][2];
+		this.listeCercles = new Cercle [listeC.size()];
 		this.listeDettes = new String [listeD.size()][3];
 		for(int i = 0; i<listeC.size();++i){
 			String string1 = listeC.get(i);
 			//On va récupérer le cercle et le fond
 			String[] CercleEtFond = string1.split(" ");
+			Cercle cercle = new Cercle(i,Integer.parseInt(CercleEtFond[1]),CercleEtFond[0]);
 			//placer ds une liste pour le récupérer plus facilements
-			this.listeCercles[i][0] = CercleEtFond[0];
-			this.listeCercles[i][1] = CercleEtFond[1];
+			this.listeCercles[i] = cercle;
 		}
 		for(int j = 0; j<listeD.size();++j){
 			//idem qu'au dessus mas pour les dettes

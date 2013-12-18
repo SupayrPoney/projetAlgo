@@ -3,46 +3,50 @@ import java.util.Vector;
 
 public class Matrice {
 	//Attributs
-	private Vector<String> matrice [][];
+	private int matrice [][];
 	//Constructeur
-	public Matrice(String Cercles[][], String Dettes[][]){
+	public Matrice(Cercle Cercles[], String Dettes[][]){
 		System.out.println("IN Matrice");
-		matrice = new Vector[Cercles.length][Dettes.length];
+		matrice = new int[Cercles.length][Cercles.length];
 		for(int i=0; i< Cercles.length; i++){
-			for(int j=0; j< Dettes.length; j++){
-				Vector<String> element = new Vector();
-				System.out.print("Dettes[0]");
-				System.out.println(Dettes[j][0]);
-				System.out.print("Dettes[1]");
-				System.out.println(Dettes[j][1]);
-				System.out.print("Cerles[0]");
-				System.out.println(Cercles[i][0]);
-				if(Cercles[i][0].equals(Dettes[j][0])){
-					//si c'est le début de l'arc
-					element.add("1");
-					element.add(Dettes[j][2]);
-					matrice[i][j] = element;
-				}
-				else if(Cercles[i][0].equals(Dettes[j][1])){
-					//si c'est la fin de l'arc
-					element.add("-1");
-					element.add(Dettes[j][2]);
-					matrice[i][j] = element;
-				}
-				else{
-					// si l'arc ne passe pas par ces sommets
-					element.add("0");
-					element.add("0");
-					matrice[i][j] = element;
+			for(int j=0; j< Cercles.length; j++){
+				matrice[i][j] = 0;
+			}
+		}
+
+
+		for(int i=0; i< Dettes.length; i++){
+				for(int k=0; k< Cercles.length; k++){
+					for(int l=0; l< Cercles.length; l++){
+						System.out.print("nom cercle1");
+						System.out.println(Dettes[i][0]);
+						System.out.println(Cercles[k].getNom());
+						System.out.print("nom cercle2");
+						System.out.println(Dettes[i][1]);
+						System.out.println(Cercles[l].getNom());
+						System.out.print("Dette");
+						System.out.println(Dettes[0][2]);
+						System.out.print("num cercle");
+						System.out.println(Cercles[0].getNum());
+						System.out.print("Solde cercle");
+						System.out.println(Cercles[0].getSolde());
+						if(Dettes[i][0].equals(Cercles[k].getNom()) && Dettes[i][1].equals(Cercles[l].getNom())) {
+							matrice[Cercles[k].getNum()][Cercles[l].getNum()] = Integer.parseInt(Dettes[i][2]);
+					}
 				}
 			}
 		}
+
+
+
+
 		for(int i=0; i< Cercles.length; i++){
-			for(int j=0; j< Dettes.length; j++){
+			for(int j=0; j< Cercles.length; j++){
 				System.out.print(matrice[i][j]);
 			}
 			System.out.println(",");
 		}
 	}
 	//Méthodes
+	
 }

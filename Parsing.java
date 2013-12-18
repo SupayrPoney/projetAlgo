@@ -28,16 +28,11 @@ public class Parsing{
 				else{
 					listeDettes.add(ligne);
 				}
-				System.out.println(ligne);
 			}
 			br.close();
 		}catch(Exception e){
 			System.out.println(e.toString());
 		}
-		System.out.println("listeCercles: ");
-		System.out.println(listeCercles);
-		System.out.println("listeDettes: ");
-		System.out.println(listeDettes);
 	}
 	
 	//Méthodes
