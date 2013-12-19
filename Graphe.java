@@ -152,4 +152,11 @@ public class Graphe {
 		}
 		return minimum;
 	}
+
+//Fonction qui réduit la solde pour tout un cycle
+	public void reductionSolde (Vector <Cercle> cycle, int min){
+        for(int i = 0; i> cycle.size(); ++i){
+            cycle.get(i).diminuerSolde(min);
+        }
+    }
 }
