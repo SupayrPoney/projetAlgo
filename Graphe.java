@@ -1,4 +1,5 @@
 import java.util.Vector;
+import java.io.*;
 
 
 public class Graphe {
@@ -81,19 +82,56 @@ public class Graphe {
 		}
 	}
 
-
-
-		/*
-		for (int i = 0;i<listeCercles.size();++i){
-			for (int j = 0;j<listeCercles.size();++j){
-				if (matriceDettes[i][j] != 0){
-					nextCercle = listeCercles[j];
-
+	public String getTextGraphViz(){
+		String toWrite = new String();
+		//ajoute la liste des cercles
+		for (int i = 0; i<listeCercles.size();++i){
+			toWrite = toWrite + listeCercles.get(i).getNom()+"[label=\"" + listeCercles.get(i).getNom()+ "\\n" +"("+ listeCercles.get(i).getSolde()+")" + "\""  +"]" + ";\n";
+		}
+		//ajoute les liens (dettes)
+		for (int i = 0; i<listeCercles.size();++i){
+			for (int j = 0; j<listeCercles.size();++j){
+				if (matriceDettes.get(i).get(j) != 0){
+					toWrite = toWrite + listeCercles.get(i).getNom() + "->" + listeCercles.get(j).getNom() + "[label=" + Integer.toString(matriceDettes.get(i).get(j)) +"]" + ";\n";
 				}
 			}
 		}
-		*/
+		return toWrite;
 	}
+
+	public void sauvegarderGraphe(String texteGraphviz){
+			//on met try si jamais il y a une exception
+			try{
+				/**
+				 * BufferedWriter a besoin d un FileWriter, 
+				 * les 2 vont ensemble, on donne comme argument le nom du fichier
+				 * true signifie qu on ajoute dans le fichier (append), on ne marque pas par dessus 			 
+				 */
+				FileWriter fw = new FileWriter("graph.dot");
+				
+				// le BufferedWriter output auquel on donne comme argument le FileWriter fw cree juste au dessus
+				BufferedWriter output = new BufferedWriter(fw);
+				
+				//on marque dans le fichier ou plutot dans le BufferedWriter qui sert comme un tampon(stream)
+				output.write("digraph G {\n");
+				output.write(texteGraphviz);
+				output.write("\n}");
+				//on peut utiliser plusieurs fois methode write
+				
+				output.flush();
+				//ensuite flush envoie dans le fichier, ne pas oublier cette methode pour le BufferedWriter
+				
+				output.close();
+				//et on le ferme
+				System.out.println("fichier créé");
+			}
+			catch(IOException ioe){
+				System.out.print("Erreur : ");
+				ioe.printStackTrace();
+			}
+
+	}
+
 
 //TODO, pas de [] pour vector
 	public int trouveMin(Vector <Cercle>listeCercles, Matrice matriceDettes){
