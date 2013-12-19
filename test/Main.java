@@ -83,32 +83,9 @@ public class Main{
 		matriceDettes.add(ligne1);
 		matriceDettes.add(ligne2);
 
-
-		public Vector getCycles(){
-			for (int i = 0;i<listeCercles.size();++i){
-				Vector <Cercle> parcours = new Vector();
-				cycle(i,parcours);
-				for(int i = 0; i< parcours.size();++i){
-					System.out.println(parcours.get(i).getNom());
-				}
-			}
-		}
-		public Vector <Cercle> cycle(int numCercle, Vector <Cercle> parcours){
-			for (int i = 0;i<listeCercles.size();++i){
-				//i == horizontal; numCercle = vertical
-				parcours.add(listeCercles.get(numCercle));
-				if ((matriceDettes[numCercle][i] != 0) && !(i==parcours[0].getNum())) {
-					
-					getCycles(i,parcours);
-					parcours.remove(parcours.size()-1);
-				}
-				else if ((matriceDettes[numCercle][i] != 0) && (i==parcours[0].getNum())) {
-					cycles.add(parcours);//on a trouve un cycle
-				}
-			}
-		}
-
-		getCycles();
+		Test test = new Test(listeCercles,matriceDettes);
+		
+		test.getCycles();
 
 
 
