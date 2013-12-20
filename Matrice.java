@@ -3,50 +3,35 @@ import java.util.Vector;
 
 public class Matrice {
 	//Attributs
-	private int matrice [][];
+	private Vector <Vector <Integer>> matrice;
 	//Constructeur
-	public Matrice(Cercle Cercles[], String Dettes[][]){
-		System.out.println("IN Matrice");
-		matrice = new int[Cercles.length][Cercles.length];
-		for(int i=0; i< Cercles.length; i++){
-			for(int j=0; j< Cercles.length; j++){
-				matrice[i][j] = 0;
+	public Matrice(Vector <Cercle> listeCercles,Vector <Vector <String>> listeDettes){
+		matrice = new Vector <Vector <Integer>>();
+		Vector <Integer> line = new Vector <Integer>();
+
+		//initialise la matrice pour pouvoir changer une valeur n'importe ou
+		for(int i=0; i< listeCercles.size(); i++){
+			line = new Vector <Integer>();
+			for(int j=0; j< listeCercles.size(); j++){
+				line.add(0);
 			}
+			matrice.add(line);
 		}
 
-
-		for(int i=0; i< Dettes.length; i++){
-				for(int k=0; k< Cercles.length; k++){
-					for(int l=0; l< Cercles.length; l++){
-						System.out.print("nom cercle1");
-						System.out.println(Dettes[i][0]);
-						System.out.println(Cercles[k].getNom());
-						System.out.print("nom cercle2");
-						System.out.println(Dettes[i][1]);
-						System.out.println(Cercles[l].getNom());
-						System.out.print("Dette");
-						System.out.println(Dettes[0][2]);
-						System.out.print("num cercle");
-						System.out.println(Cercles[0].getNum());
-						System.out.print("Solde cercle");
-						System.out.println(Cercles[0].getSolde());
-						if(Dettes[i][0].equals(Cercles[k].getNom()) && Dettes[i][1].equals(Cercles[l].getNom())) {
-							matrice[Cercles[k].getNum()][Cercles[l].getNum()] = Integer.parseInt(Dettes[i][2]);
+		for(int i=0; i< listeDettes.size(); i++){
+				for(int k=0; k< listeCercles.size(); k++){
+					for(int l=0; l< listeCercles.size(); l++){
+						if(listeDettes.get(i).get(0).equals(listeCercles.get(k).getNom()) && listeDettes.get(i).get(1).equals(listeCercles.get(l).getNom())) {
+							matrice.get(k).set(l,Integer.parseInt(listeDettes.get(i).get(2)));
 					}
 				}
 			}
 		}
 
-
-
-
-		for(int i=0; i< Cercles.length; i++){
-			for(int j=0; j< Cercles.length; j++){
-				System.out.print(matrice[i][j]);
-			}
-			System.out.println(",");
-		}
 	}
-	//Méthodes
+	//Methode
+	public Vector <Vector <Integer>> getMatrice(){
+		return matrice;
+	}
 	
 }
