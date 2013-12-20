@@ -67,24 +67,35 @@ public class Main{
 		listeCercles.add(new Cercle(2,5000,"CP"));
 
 		Vector <Integer>ligne0 = new Vector <Integer>();
-		ligne0.add(10);
+		ligne0.add(0);
 		ligne0.add(10);
 		ligne0.add(20);
 		Vector <Integer> ligne1 = new Vector <Integer>();
-		ligne1.add(440);
+		ligne1.add(0);
 		ligne1.add(0);
 		ligne1.add(20);
 		Vector <Integer> ligne2 = new Vector <Integer>();
 		ligne2.add(200);
-		ligne2.add(10);
+		ligne2.add(0);
 		ligne2.add(0);
 
 		matriceDettes.add(ligne0);
 		matriceDettes.add(ligne1);
 		matriceDettes.add(ligne2);
 
+		/*Vector <Vector <Cercle>> matriceCercles = new Vector <Vector <Cercle>>();
+		matriceCercles.add(listeCercles);
+		matriceCercles.add(listeCercles);
+
+		Vector <Cercle> listeCercless = new Vector <Cercle>();
+		listeCercless.add(new Cercle(3,5000,"PL"));
+		listeCercless.add(new Cercle(3,5000,"PL"));
+		listeCercless.add(new Cercle(3,5000,"PL"));
+		*/
 		Test test = new Test(listeCercles,matriceDettes);
-		
+
+		//System.out.println(test.containsCycle(matriceCercles, listeCercless));
+
 		test.getCycles();
 
 

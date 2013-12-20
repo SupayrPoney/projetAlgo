@@ -13,11 +13,16 @@ public class Graphe {
 	private Vector <String>listeDettesString;
 	private int ordreGraphe;
 	private String chaine;
+	private Vector <Vector <Integer>> matriceDettes;
 	
 	//Constructeur
-	public Graphe(){
+	public Graphe(String fichier){
 
 		cycles = new Vector <Vector <Cercle>>();
+		parse(fichier);//récupère les infos dans le graphe
+		analyseListes();//traite les infos
+		Matrice matriceD = new Matrice(listeCercles,listeDettesTemp);//initialise une matrice de dette à partir des cercles et des dettes
+		matriceDettes = matriceD.getMatrice();
 	}
 
 	public void parse(String fichier){
@@ -74,7 +79,7 @@ public class Graphe {
 		}	
 	}
 
-	public String getTextGraphViz(Matrice matriceDettes){
+	public String getTextGraphViz(){
 		String toWrite = new String();
 		//ajoute la liste des cercles
 		for (int i = 0; i<listeCercles.size();++i){
@@ -84,8 +89,8 @@ public class Graphe {
 		//ajoute les liens (dettes)
 		for (int i = 0; i<listeCercles.size();++i){
 			for (int j = 0; j<listeCercles.size();++j){
-				if (matriceDettes.getMatrice().get(i).get(j) != 0){
-					toWrite = toWrite + listeCercles.get(i).getNom() + "->" + listeCercles.get(j).getNom() + "[label=" + Integer.toString(matriceDettes.getMatrice().get(i).get(j)) +"]" + ";\n";//relation avec la valeur de la dette
+				if (matriceDettes.get(i).get(j) != 0){
+					toWrite = toWrite + listeCercles.get(i).getNom() + "->" + listeCercles.get(j).getNom() + "[label=" + Integer.toString(matriceDettes.get(i).get(j)) +"]" + ";\n";//relation avec la valeur de la dette
 				}
 			}
 		}
@@ -115,30 +120,30 @@ public class Graphe {
 			}
 
 	}
-	public void rembourser(Matrice matriceDettes){
+	public void rembourser(){
 		int numeroOperation = 0;//permet d'afficher le numéro des opérations
-		boolean actionDone = false;//permet de verifier si une action a ete effectuee
+		boolean actionDone;//permet de verifier si une action a ete effectuee
 		do{
 			actionDone = false;//rien n'as encore ete fait
 			for (int i = 0; i<listeCercles.size();++i){
 				int solde = listeCercles.get(i).getSolde();
 				for (int j = 0; j<listeCercles.size();++j){
-					int dette = matriceDettes.getMatrice().get(i).get(j);
+					int dette = matriceDettes.get(i).get(j);
 					if (solde > 0 && dette != 0){
 						++numeroOperation;//on a realise un transfert d'argent
 						System.out.print(numeroOperation + ") ");
 						if (solde>=dette){// si le le payeur peut payer toute sa dette
-							System.out.print("Le cercle " + listeCercles.get(i).getNom() +" paie : " + dette + " au cercle " + listeCercles.get(j).getNom());
+							System.out.print("Le cercle " + listeCercles.get(i).getNom() +" paie la somme de " + dette + " au cercle " + listeCercles.get(j).getNom());
 							solde-= dette;//le donneur perd ce qu'il donne
 							listeCercles.get(i).diminuerSolde(dette);
-							matriceDettes.getMatrice().get(i).set(j,0);
+							matriceDettes.get(i).set(j,0);
 							listeCercles.get(j).augmenterSolde(dette);//et le receveur le recupere
 						}
 						else{//s'il ne peut payer qu'une partie
-							System.out.print("Le cercle " + listeCercles.get(i).getNom() +" paie : " + solde+ " au cercle " + listeCercles.get(j).getNom());
+							System.out.print("Le cercle " + listeCercles.get(i).getNom() +" paie la somme de " + solde+ " au cercle " + listeCercles.get(j).getNom());
 							listeCercles.get(i).diminuerSolde(solde);//il donne tout ce qu'il a
-							matriceDettes.getMatrice().get(i).set(j,dette-solde);
-							System.out.print(" (reste a payer : ) " + matriceDettes.getMatrice().get(i).get(j));
+							matriceDettes.get(i).set(j,dette-solde);
+							System.out.print(" (reste a payer : "+ matriceDettes.get(i).get(j)+ ") ");
 							listeCercles.get(j).augmenterSolde(solde);//le cercle receveur depouille le cercle donneur
 							solde = 0;//il donne tout ce qu'il a
 
@@ -152,6 +157,7 @@ public class Graphe {
 				}
 			}
 		}while(actionDone == true);//tant qu'une action est faite
+		System.out.println();
 	}
 
 	public void print(Vector <Cercle> vecteur){
@@ -160,11 +166,11 @@ public class Graphe {
 		}
 	}
 
-	public void getCycles(Matrice matriceDettes){
+	public void getCycles(){
 		for (int i = 0;i<listeCercles.size();++i){ // i -> lecture verticale
 			Vector <Cercle> parcours = new Vector <Cercle>(); //Initialisatin du vecteur de cercles qui va sauvegarder le parcours effectué lors de la detection
 			parcours.add(listeCercles.get(i)); // Au début de chaque boucle parcours aura comme premier element, le sommet dont il est question dans la boucle.
-			cycle(i,parcours,matriceDettes);			
+			cycle(i,parcours);			
 		}
 	}
 
@@ -194,12 +200,12 @@ public class Graphe {
 		return false;
 	}
  
-	public void cycle(int numCercle, Vector <Cercle> parcours,Matrice matriceDettes){
+	public void cycle(int numCercle, Vector <Cercle> parcours){
 		for (int i = 0;i<listeCercles.size();++i){//i == horizontal; numCercle = vertical
-			if ((matriceDettes.getMatrice().get(numCercle).get(i) != 0)){
+			if ((matriceDettes.get(numCercle).get(i) != 0)){
 				if(!(i==parcours.get(0).getNum()) && !(contains(parcours,listeCercles.get(i).getNum()))){ // On vérifie bien que le sommet actuel n'est pas le sommet de départ et que "parcours" ne contient pas encore le sommet actuel.
 					parcours.add(listeCercles.get(i));// Ajout du sommet actuel dans "parcours" avant de rentrer dans la récursion
-					cycle(i,parcours,matriceDettes);
+					cycle(i,parcours);
 					parcours.remove(parcours.size()-1); // Pour récupérer l'état de "parcours"
 				}
 				else if (i==parcours.get(0).getNum()) { // Si le sommet actuel est le sommet de départ de recherche de cycle
@@ -220,27 +226,17 @@ public class Graphe {
 		}
 	}	
 
-    public int trouveMin(Vector <Cercle>cycle, Matrice matriceDettes){
-        int minimum = matriceDettes.getMatrice().get(cycle.get(0).getNum()).get(cycle.get(1).getNum());//min = 1ere dette
-        for (int i = 0;i< cycle.size(); ++i){
-            int indicei = cycle.get(i).getNum();
-            int indicej;
-            if (i!= cycle.size()-1){//si c'est pas le dernier element
-                    indicej = cycle.get(i+1).getNum();
-            }
-            else{
-                    indicej = cycle.get(0).getNum();
-            }
-            if (matriceDettes.getMatrice().get(indicei).get(indicej)<minimum){//si la dette entre les 2 est plus petite que le min courant
-                minimum = matriceDettes.getMatrice().get(indicei).get(indicej);//remplacer le min
-            }
-
-
+    public int trouveMin(Vector <Cercle>cycle){
+        int minimum = matriceDettes.get(cycle.get(0).getNum()).get(cycle.get(1).getNum());//min = 1ere dette
+        for (int i = 0;i< cycle.size()-1; ++i){
+            if(matriceDettes.get(cycle.get(i).getNum()).get(cycle.get(i+1).getNum()) < minimum ){
+				minimum = matriceDettes.get(cycle.get(i).getNum()).get(cycle.get(i+1).getNum());
+			}
         }
         return minimum;
     }
      
-    //Fonction qui réduit la solde pour tout un cycle
+    /*//Fonction qui réduit la solde pour tout un cycle
     public void reductionSolde (Vector <Cercle> cycle, int min){
     	System.out.println("reduction de : " + min);
         for(int i = 0; i> cycle.size(); ++i){ //on parcourt le cycle et on diminue de manière égale la solde de tous les cercles du cycle
@@ -249,19 +245,44 @@ public class Graphe {
         }
     	System.out.println("...");
 
-    }
+    }*/
 
-    public void reduitCycles(Matrice matriceDettes){
-    	getCycles(matriceDettes);
+    public void reduitCycles(){
+    	getCycles();
+    	System.out.println();
     	for (int i = 0;i<cycles.size();++i){
+    		int min = trouveMin(cycles.get(i));
+    		System.out.println((i+1)+") reduction de "+min+": ");
+    		for(int j= 0; j< cycles.get(i).size()-1;++j){
+    			System.out.print(cycles.get(i).get(j).getNom()+"("+matriceDettes.get(cycles.get(i).get(j).getNum()).get(cycles.get(i).get(j+1).getNum()) + ")->");
+    			if(j == cycles.get(i).size()-2){
+    				System.out.println(cycles.get(i).get(j+1).getNom());
+
+    			}
+    			matriceDettes.get(cycles.get(i).get(j).getNum()).set(cycles.get(i).get(j+1).getNum(),(matriceDettes.get(cycles.get(i).get(j).getNum()).get(cycles.get(i).get(j+1).getNum()))-min);//matrice[i][i+1]
+    		}
+    		
     		/*
     		reduction de 120
 			CI (120)-> CePha (140)-> CI (120)-> ...
 			nouvelle situation :
 			CePha (20)-> CI
 			*/
-    		reductionSolde(cycles.get(i),trouveMin(cycles.get(i),matriceDettes));
+    		//reductionSolde(cycles.get(i),trouveMin(cycles.get(i)));
     	}
+    	System.out.println("Nouvelles situation: ");
+    	for (int i = 0; i<cycles.size();++i){
+    		for(int j= 0; j< cycles.get(i).size()-1;++j){
+    			if(matriceDettes.get(cycles.get(i).get(j).getNum()).get(cycles.get(i).get(j+1).getNum()) != 0){
+    				System.out.print(cycles.get(i).get(j).getNom()+"("+matriceDettes.get(cycles.get(i).get(j).getNum()).get(cycles.get(i).get(j+1).getNum()) + ")->");
+    				if(j == cycles.get(i).size()-2){
+    					System.out.println(cycles.get(i).get(j+1).getNom());
+    				}	
+    			}
+
+    		}
+    	}
+    	System.out.println();
     }
 
 

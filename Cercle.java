@@ -1,7 +1,7 @@
 import java.util.Vector;
 
 
-public class Cercle {
+public class Cercle 	{
 	//Attributs
 	private int solde_;
 	private int num;
